@@ -1,5 +1,11 @@
 # SumnersMetaverse Repository Integration Guide
 
+> **⚠️ IMPORTANT NOTICE:**
+> - This guide uses **YOUR EXISTING** Docker files and configurations from your repositories
+> - Use **YOUR ACTUAL** credentials from Tenderly.co, your Redis repository, and Bitcoin Core
+> - This documentation shows HOW to connect things, not WHAT credentials to use
+> - See `USING-YOUR-EXISTING-CREDENTIALS.md` in the root directory for clarification
+
 This document explains how to connect your various SumnersMetaverse repositories to your Bitcoin Core node and how to execute the code to run everything together.
 
 ## Overview of Your Repositories

@@ -1,5 +1,7 @@
 # Quick Reference: Connecting Your SumnersMetaverse Repositories
 
+> **IMPORTANT:** This is a reference guide. Use YOUR existing credentials from Tenderly, Redis repository, and Bitcoin Core. See `USING-YOUR-EXISTING-CREDENTIALS.md` for details.
+
 ## Your Repository Ecosystem
 
 | Repository | Purpose | Connects to Bitcoin Core? | Status |
@@ -22,31 +24,40 @@ python3 contrib/mempool-space/test-integration.py --user <your_user> --password 
 
 ### 2️⃣ 3xplCore (Blockchain Explorer) - EASIEST TO ADD
 ```bash
-# Clone
+# Clone YOUR existing repository
 git clone https://github.com/SumnersMetaverse/3xplCore.git
 cd 3xplCore
 
-# Configure
+# Use the existing .env.example
 cp .env.example .env
 nano .env
-# Add: MODULE_bitcoin-main_NODES[]=http://user:pass@127.0.0.1:8332/
+# Add YOUR Bitcoin Core RPC credentials:
+# MODULE_bitcoin-main_NODES[]=http://YOUR_USER:YOUR_PASS@127.0.0.1:8332/
 
-# Run
+# Run using existing setup
 php 3xpl.php bitcoin-main M   # Monitor mode (tracks new blocks)
 ```
 
 ### 3️⃣ LND + LndHub (Lightning Network) - MORE COMPLEX
 ```bash
-# Install LND first
+# Install LND first (if not already installed)
 wget https://github.com/lightningnetwork/lnd/releases/download/v0.17.3-beta/lnd-linux-amd64-v0.17.3-beta.tar.gz
 tar -xzf lnd-linux-amd64-v0.17.3-beta.tar.gz
 sudo install -m 0755 -o root -g root -t /usr/local/bin lnd-linux-amd64-v0.17.3-beta/*
 
-# Configure LND (create ~/.lnd/lnd.conf)
+# Configure LND with YOUR Bitcoin Core credentials
+# Create ~/.lnd/lnd.conf with YOUR values:
 [Bitcoin]
 bitcoin.active=1
 bitcoin.mainnet=1
 bitcoin.node=bitcoind
+
+[Bitcoind]
+bitcoind.rpchost=127.0.0.1:8332
+bitcoind.rpcuser=YOUR_RPC_USER
+bitcoind.rpcpass=YOUR_RPC_PASS
+bitcoind.zmqpubrawblock=tcp://127.0.0.1:28332
+bitcoind.zmqpubrawtx=tcp://127.0.0.1:28333
 
 [Bitcoind]
 bitcoind.rpchost=127.0.0.1:8332
