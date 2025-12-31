@@ -263,8 +263,10 @@ Or enable ZMQ to eliminate polling entirely.
 Check firewall settings:
 
 ```bash
-# Linux - allow RPC port
-sudo ufw allow 8332/tcp
+# Linux - ONLY if mempool.space runs on a different machine
+# WARNING: Do NOT allow external access if running on localhost
+# This opens your RPC port to the network - only do this if needed
+# sudo ufw allow 8332/tcp
 
 # Check if port is listening
 netstat -an | grep 8332

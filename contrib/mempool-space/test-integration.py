@@ -62,7 +62,7 @@ def make_rpc_request(
     user: str,
     password: str,
     method: str,
-    params: list = None
+    params: Optional[list] = None
 ) -> Tuple[bool, Optional[Dict[str, Any]]]:
     """Make a JSON-RPC request to Bitcoin Core"""
     if params is None:
@@ -87,6 +87,8 @@ def make_rpc_request(
     
     try:
         request = urllib.request.Request(url, data=data, headers=headers)
+        # Timeout is set to 10 seconds for most RPC calls
+        # Some calls like initial sync queries may need longer
         with urllib.request.urlopen(request, timeout=10) as response:
             result = json.loads(response.read().decode())
             if 'error' in result and result['error'] is not None:
