@@ -1,36 +1,104 @@
-# Bitcoin Core + Repository Integration Setup Script
-# This script helps set up Bitcoin Core with your other repositories
-# Run this in PowerShell as Administrator
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║          Bitcoin Core + Repository Integration Setup Script              ║
+# ║                                                                           ║
+# ║  INSTRUCTIONS:                                                            ║
+# ║  1. Copy this entire script                                               ║
+# ║  2. Paste into a text editor                                              ║
+# ║  3. Replace ALL values marked with >>>REPLACE THIS<<<                    ║
+# ║  4. Save the file                                                         ║
+# ║  5. Run in PowerShell as Administrator                                    ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
 
-# ============================================================================
-# CONFIGURATION - UPDATE THESE WITH YOUR VALUES
-# ============================================================================
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║                    📝 FILL IN YOUR CREDENTIALS HERE                      ║
+# ║                                                                           ║
+# ║  REPLACE each ">>>REPLACE THIS<<<" with your actual values               ║
+# ║  Keep the quotes around your values                                       ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
 
-# Bitcoin Core RPC Credentials (from your bitcoin.conf)
-$BITCOIN_RPC_USER = "YOUR_RPC_USERNAME_HERE"
-$BITCOIN_RPC_PASSWORD = "YOUR_RPC_PASSWORD_HERE"
-$BITCOIN_RPC_HOST = "127.0.0.1"
-$BITCOIN_RPC_PORT = "8332"
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ 1️⃣  BITCOIN CORE RPC CREDENTIALS                                        │
+# │    Find these in your bitcoin.conf file or Tenderly.co account          │
+# └─────────────────────────────────────────────────────────────────────────┘
+$BITCOIN_RPC_USER     = ">>>REPLACE THIS<<<"        # Example: "mempool"
+$BITCOIN_RPC_PASSWORD = ">>>REPLACE THIS<<<"        # Your secure password
+$BITCOIN_RPC_HOST     = "127.0.0.1"                 # Usually localhost
+$BITCOIN_RPC_PORT     = "8332"                      # Default Bitcoin Core RPC port
 
-# Redis Configuration (from your Redis repository)
-$REDIS_HOST = "YOUR_REDIS_HOST_HERE"
-$REDIS_PORT = "6379"
-$REDIS_PASSWORD = "YOUR_REDIS_PASSWORD_HERE"
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ 2️⃣  REDIS SERVER CREDENTIALS                                            │
+# │    Find these in your Redis repository or server configuration          │
+# └─────────────────────────────────────────────────────────────────────────┘
+$REDIS_HOST           = ">>>REPLACE THIS<<<"        # Example: "redis.example.com"
+$REDIS_PORT           = "6379"                      # Default Redis port
+$REDIS_PASSWORD       = ">>>REPLACE THIS<<<"        # Your Redis password (if set)
 
-# Tenderly Configuration (from tenderly.co)
-$TENDERLY_API_KEY = "YOUR_TENDERLY_API_KEY_HERE"
-$TENDERLY_PROJECT_ID = "YOUR_TENDERLY_PROJECT_ID_HERE"
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ 3️⃣  TENDERLY CONFIGURATION                                              │
+# │    Find these in your Tenderly.co dashboard                             │
+# └─────────────────────────────────────────────────────────────────────────┘
+$TENDERLY_API_KEY     = ">>>REPLACE THIS<<<"        # From Tenderly settings
+$TENDERLY_PROJECT_ID  = ">>>REPLACE THIS<<<"        # Your Tenderly project ID
 
-# Project directories
-$PROJECTS_DIR = "$HOME\projects"
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ 4️⃣  PROJECT DIRECTORY (Optional - you can keep this as-is)             │
+# └─────────────────────────────────────────────────────────────────────────┘
+$PROJECTS_DIR         = "$HOME\projects"            # Where to clone repositories
 
-# ============================================================================
-# DO NOT EDIT BELOW THIS LINE UNLESS YOU KNOW WHAT YOU'RE DOING
-# ============================================================================
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║                  ⚠️  DO NOT EDIT BELOW THIS LINE  ⚠️                     ║
+# ║                                                                           ║
+# ║  The code below is automated - you don't need to change anything         ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
 
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "Bitcoin Core Integration Setup" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "╔══════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+Write-Host "║          Bitcoin Core Integration Setup                                  ║" -ForegroundColor Cyan
+Write-Host "╚══════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host ""
+
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ VALIDATION: Check if user replaced placeholder values                   │
+# └─────────────────────────────────────────────────────────────────────────┘
+Write-Host "Validating configuration..." -ForegroundColor Yellow
+
+$placeholdersFound = @()
+
+if ($BITCOIN_RPC_USER -eq ">>>REPLACE THIS<<<") {
+    $placeholdersFound += "BITCOIN_RPC_USER"
+}
+if ($BITCOIN_RPC_PASSWORD -eq ">>>REPLACE THIS<<<") {
+    $placeholdersFound += "BITCOIN_RPC_PASSWORD"
+}
+if ($REDIS_HOST -eq ">>>REPLACE THIS<<<") {
+    $placeholdersFound += "REDIS_HOST"
+}
+if ($REDIS_PASSWORD -eq ">>>REPLACE THIS<<<") {
+    $placeholdersFound += "REDIS_PASSWORD"
+}
+if ($TENDERLY_API_KEY -eq ">>>REPLACE THIS<<<") {
+    $placeholdersFound += "TENDERLY_API_KEY"
+}
+if ($TENDERLY_PROJECT_ID -eq ">>>REPLACE THIS<<<") {
+    $placeholdersFound += "TENDERLY_PROJECT_ID"
+}
+
+if ($placeholdersFound.Count -gt 0) {
+    Write-Host ""
+    Write-Host "❌ ERROR: You haven't replaced all placeholder values!" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Please edit this script and replace the following:" -ForegroundColor Yellow
+    foreach ($placeholder in $placeholdersFound) {
+        Write-Host "  • $placeholder" -ForegroundColor Red
+    }
+    Write-Host ""
+    Write-Host "Look for lines with '>>>REPLACE THIS<<<' at the top of this script" -ForegroundColor Yellow
+    Write-Host "and replace them with your actual credentials." -ForegroundColor Yellow
+    Write-Host ""
+    pause
+    exit 1
+}
+
+Write-Host "  ✅ Configuration validated successfully!" -ForegroundColor Green
 Write-Host ""
 
 # Function to check if a command exists
