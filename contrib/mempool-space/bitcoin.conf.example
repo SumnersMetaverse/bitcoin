@@ -1,0 +1,238 @@
+# Bitcoin Core Configuration for mempool.space Integration
+#
+# This file contains example configuration settings for running Bitcoin Core
+# with mempool.space. Copy relevant sections to your bitcoin.conf file.
+#
+# Location of bitcoin.conf:
+# - Linux: ~/.bitcoin/bitcoin.conf
+# - macOS: ~/Library/Application Support/Bitcoin/bitcoin.conf
+# - Windows: %APPDATA%\Bitcoin\bitcoin.conf
+
+##############################################################################
+# Required Settings for mempool.space
+##############################################################################
+
+# Enable RPC server (required for mempool.space to connect)
+server=1
+
+# Enable REST API (recommended for efficient data queries)
+rest=1
+
+# Enable transaction index (required for full transaction lookup functionality)
+# Note: Enabling this requires a one-time reindex with -reindex flag
+txindex=1
+
+##############################################################################
+# RPC Authentication
+##############################################################################
+
+# Set RPC username and password
+# IMPORTANT: Use strong credentials in production!
+rpcuser=mempool
+rpcpassword=change_this_to_a_strong_password_in_production
+
+# Alternative: Use rpcauth for better security
+# Generate with: python3 share/rpcauth/rpcauth.py <username>
+# Example output format:
+# rpcauth=mempool:hash$salt
+# Then use the generated password in your mempool.space config
+
+##############################################################################
+# RPC Network Settings
+##############################################################################
+
+# Bind RPC to specific IP (localhost only for security)
+rpcbind=127.0.0.1
+
+# Allow RPC connections from localhost
+rpcallowip=127.0.0.1
+
+# If mempool.space backend is on a different machine, add its IP:
+# rpcallowip=192.168.1.100
+
+# RPC port (defaults: mainnet=8332, testnet=18332, signet=38332, regtest=18443)
+# Uncomment to use non-default port:
+# rpcport=8332
+
+##############################################################################
+# ZMQ Settings (Optional but Recommended)
+##############################################################################
+
+# ZMQ enables real-time notifications instead of polling
+# This significantly improves mempool.space responsiveness
+
+# Publish raw block data
+zmqpubrawblock=tcp://127.0.0.1:28332
+
+# Publish raw transaction data
+zmqpubrawtx=tcp://127.0.0.1:28333
+
+# Publish block hash
+zmqpubhashblock=tcp://127.0.0.1:28334
+
+# Publish transaction hash
+zmqpubhashtx=tcp://127.0.0.1:28335
+
+# ZMQ for sequence notifications
+zmqpubsequence=tcp://127.0.0.1:28336
+
+##############################################################################
+# Mempool Settings
+##############################################################################
+
+# Maximum mempool size in megabytes (default: 300)
+# Increase if you want to track more transactions
+maxmempool=300
+
+# Minimum fee rate for transaction relay (default: 0.00001 BTC/kB)
+# minrelaytxfee=0.00001
+
+# Maximum orphan transactions kept in memory (default: 100)
+# maxorphantx=100
+
+##############################################################################
+# Performance Tuning
+##############################################################################
+
+# Database cache size in megabytes (default: 450)
+# Increase for better performance, especially during initial sync
+dbcache=1024
+
+# Maximum number of inbound+outbound connections (default: 125)
+# maxconnections=125
+
+# Number of threads to service RPC calls (default: 4)
+rpcthreads=8
+
+# Enable coinstatsindex for faster UTXO set statistics (optional)
+# coinstatsindex=1
+
+##############################################################################
+# Network Selection
+##############################################################################
+
+# Mainnet (default - no flag needed)
+# [No settings required for mainnet]
+
+# Testnet (Bitcoin test network)
+# testnet=1
+
+# Signet (another test network)
+# signet=1
+
+# Regtest (local regression test network for development)
+# regtest=1
+
+##############################################################################
+# Logging
+##############################################################################
+
+# Enable debug logging for specific categories (useful for troubleshooting)
+# debug=mempool
+# debug=rpc
+# debug=http
+
+# Or enable all debug logging (generates large log files!)
+# debug=1
+
+##############################################################################
+# Additional Security Settings
+##############################################################################
+
+# Disable RPC access to certain methods (comma-separated list)
+# Example: disable wallet functions if not needed
+# disablewallet=1
+
+# Whitelist specific RPC methods (all others will be disabled)
+# rpcwhitelist=user:getblockchaininfo,getmempoolinfo,getrawmempool
+
+# Disable DNS seeds (use if you have trusted peers)
+# dnsseed=0
+
+# Disable peer bloom filters (recommended for public nodes)
+# peerbloomfilters=0
+
+# Disable listening for incoming connections (if not needed)
+# listen=0
+
+##############################################################################
+# Pruning (Optional - NOT recommended for mempool.space)
+##############################################################################
+
+# Note: Pruning is NOT recommended when running mempool.space as it needs
+# access to historical blockchain data. However, if disk space is limited:
+
+# Enable pruning and keep only last X MB of blocks
+# prune=50000
+
+# WARNING: With pruning enabled, some mempool.space features may not work:
+# - Historical block data will be limited
+# - Cannot fully validate old transactions
+# - Transaction index may be incomplete
+
+##############################################################################
+# Example Configurations by Use Case
+##############################################################################
+
+# === Minimal Setup (Basic mempool.space support) ===
+# server=1
+# rest=1
+# rpcuser=mempool
+# rpcpassword=secure_password
+# rpcbind=127.0.0.1
+# rpcallowip=127.0.0.1
+
+# === Recommended Setup (Full functionality) ===
+# server=1
+# rest=1
+# txindex=1
+# rpcuser=mempool
+# rpcpassword=secure_password
+# rpcbind=127.0.0.1
+# rpcallowip=127.0.0.1
+# zmqpubrawblock=tcp://127.0.0.1:28332
+# zmqpubrawtx=tcp://127.0.0.1:28333
+# zmqpubhashblock=tcp://127.0.0.1:28334
+# dbcache=1024
+# maxmempool=300
+
+# === High-Performance Setup (For busy explorers) ===
+# server=1
+# rest=1
+# txindex=1
+# coinstatsindex=1
+# rpcuser=mempool
+# rpcpassword=secure_password
+# rpcbind=127.0.0.1
+# rpcallowip=127.0.0.1
+# zmqpubrawblock=tcp://127.0.0.1:28332
+# zmqpubrawtx=tcp://127.0.0.1:28333
+# zmqpubhashblock=tcp://127.0.0.1:28334
+# zmqpubhashtx=tcp://127.0.0.1:28335
+# zmqpubsequence=tcp://127.0.0.1:28336
+# dbcache=4096
+# maxmempool=500
+# rpcthreads=16
+# maxconnections=200
+
+##############################################################################
+# Notes
+##############################################################################
+
+# 1. After adding txindex=1, you need to reindex once:
+#    bitcoind -reindex
+#
+# 2. ZMQ requires Bitcoin Core to be compiled with ZMQ support
+#    Most distributions include this by default
+#
+# 3. For production use, consider using rpcauth instead of rpcpassword
+#    Generate with: python3 share/rpcauth/rpcauth.py <username>
+#
+# 4. Always use a firewall to restrict access to RPC ports
+#
+# 5. Monitor system resources (CPU, RAM, disk I/O) and adjust settings
+#    accordingly
+#
+# 6. For multiple mempool.space instances or monitoring tools, consider
+#    setting up a dedicated Bitcoin Core node for each to avoid
+#    overloading a single node
